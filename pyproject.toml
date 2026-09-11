@@ -1,0 +1,20 @@
+[project]
+name = "ptt-voice-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Rohitbista", email = "114638542+Rohitbista@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "uvicorn>=0.52.4",
+]
+
+[project.scripts]
+ptt-voice-assistant = "ptt_voice_assistant.app.server:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
