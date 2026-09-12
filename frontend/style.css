@@ -1,0 +1,395 @@
+/* ─── Reset & Base ──────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:           #0A0E1A;
+  --surface:      #131929;
+  --surface-up:   #1B2236;
+  --border:       #252D42;
+  --text:         #E8ECF4;
+  --text-muted:   #6B7A99;
+  --text-dim:     #3D4F6E;
+  --accent:       #3B82F6;
+  --accent-glow:  rgba(59, 130, 246, 0.25);
+  --accent-dim:   rgba(59, 130, 246, 0.08);
+  --recording:    #EF4444;
+  --recording-glow: rgba(239, 68, 68, 0.3);
+  --processing:   #F59E0B;
+  --success:      #10B981;
+
+  --font: 'IBM Plex Sans', system-ui, sans-serif;
+  --radius: 12px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Shell ─────────────────────────────────────────────────────────── */
+
+.shell {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 32px;
+}
+
+/* ─── Top Bar ────────────────────────────────────────────────────────── */
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0 16px;
+}
+
+.brand {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.connection-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.connection-dot.online {
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
+}
+
+.connection-dot.error {
+  background: var(--recording);
+}
+
+/* ─── Stage (button area) ────────────────────────────────────────────── */
+
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 24px 0;
+}
+
+/* ─── Status ─────────────────────────────────────────────────────────── */
+
+.status-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+}
+
+.status-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  transition: color var(--transition);
+}
+
+/* ─── Waveform ───────────────────────────────────────────────────────── */
+
+.waveform {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.waveform span {
+  display: block;
+  width: 3px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform-origin: bottom;
+}
+
+/* Recording state — bars animate */
+.waveform.active {
+  opacity: 1;
+}
+
+.waveform.active span {
+  animation: wave 0.9s ease-in-out infinite;
+}
+
+.waveform.active span:nth-child(1)  { animation-delay: 0.00s; }
+.waveform.active span:nth-child(2)  { animation-delay: 0.08s; }
+.waveform.active span:nth-child(3)  { animation-delay: 0.16s; }
+.waveform.active span:nth-child(4)  { animation-delay: 0.24s; }
+.waveform.active span:nth-child(5)  { animation-delay: 0.32s; }
+.waveform.active span:nth-child(6)  { animation-delay: 0.24s; }
+.waveform.active span:nth-child(7)  { animation-delay: 0.16s; }
+.waveform.active span:nth-child(8)  { animation-delay: 0.08s; }
+.waveform.active span:nth-child(9)  { animation-delay: 0.04s; }
+.waveform.active span:nth-child(10) { animation-delay: 0.00s; }
+
+@keyframes wave {
+  0%, 100% { height: 4px;  }
+  50%       { height: 20px; }
+}
+
+/* Processing: smaller, amber, no wave */
+.waveform.processing span {
+  background: var(--processing);
+  animation: pulse-bar 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse-bar {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1;   }
+}
+
+/* ─── PTT Button ─────────────────────────────────────────────────────── */
+
+.ptt-btn {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface-up);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: none;
+}
+
+.ptt-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.ptt-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-dim), 0 0 24px var(--accent-glow);
+}
+
+.ptt-btn.recording {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: var(--recording);
+  color: var(--recording);
+  transform: scale(1.04);
+  box-shadow: 0 0 0 1px rgba(239,68,68,0.2), 0 0 32px var(--recording-glow);
+}
+
+.ptt-btn.processing {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: var(--processing);
+  color: var(--processing);
+  cursor: wait;
+}
+
+.ptt-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.mic-icon {
+  width: 36px;
+  height: 36px;
+  position: relative;
+  z-index: 1;
+  transition: transform var(--transition);
+}
+
+.ptt-btn.recording .mic-icon {
+  transform: scale(1.08);
+}
+
+/* ─── Pulse Ring ─────────────────────────────────────────────────────── */
+
+.pulse-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1.5px solid var(--recording);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ptt-btn.recording .pulse-ring {
+  animation: pulse-ring 1.4s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);    opacity: 0.8; }
+  100% { transform: scale(1.55); opacity: 0;   }
+}
+
+/* ─── Hint Text ──────────────────────────────────────────────────────── */
+
+.hint-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 240px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Transcript Panel ───────────────────────────────────────────────── */
+
+.transcript-panel {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.transcript-panel::-webkit-scrollbar {
+  width: 4px;
+}
+.transcript-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.transcript-panel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+/* ─── Exchange / Messages ────────────────────────────────────────────── */
+
+.exchange {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* Individual message bubble */
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: fade-up 220ms ease both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.message-role {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.message.user .message-role {
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.message.assistant .message-role {
+  color: var(--success);
+  opacity: 0.7;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.message.user .message-text {
+  border-color: rgba(59, 130, 246, 0.18);
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.message.assistant .message-text {
+  border-color: rgba(16, 185, 129, 0.15);
+  background: rgba(16, 185, 129, 0.03);
+}
+
+/* ─── Error Toast ────────────────────────────────────────────────────── */
+
+.error-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: #1E1014;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #FCA5A5;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  white-space: nowrap;
+  animation: toast-in 220ms ease both, toast-out 300ms ease 3s both;
+  z-index: 100;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0);   }
+}
+@keyframes toast-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .waveform.active span,
+  .waveform.processing span,
+  .pulse-ring {
+    animation: none;
+  }
+}
