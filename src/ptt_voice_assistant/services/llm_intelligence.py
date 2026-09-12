@@ -1,7 +1,7 @@
 # services/llm.py
 
 from groq import Groq
-from ptt_voice_assistant.config.settings import GROQ_API_KEY
+from ptt_voice_assistant.config.settings import GROQ_API_KEY, LLM_MODEL
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -9,7 +9,7 @@ client = Groq(api_key=GROQ_API_KEY)
 def generate_response(user_text: str) -> str:
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model=LLM_MODEL,
         messages=[
             {
                 "role": "system",
