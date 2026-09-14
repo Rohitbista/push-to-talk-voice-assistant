@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ptt_voice_assistant.services.speech_to_text import transcribe_audio
 from ptt_voice_assistant.services.llm_intelligence import generate_response
-from ptt_voice_assistant.services.text_to_speech import text_to_speech
+from ptt_voice_assistant.services.text_to_speech import text_to_speech, text_to_speech_bytes
 
 app = FastAPI()
 
@@ -49,23 +49,20 @@ async def chat(
         # 2. Speech → Text
         # -------------------------
 
-        user_text = transcribe_audio(audio_data, safe_filename)
+        user_text = await transcribe_audio(audio_data, safe_filename)
 
         # -------------------------
         # 3. Text → LLM → Text
         # -------------------------
 
-        assistant_text = generate_response(
+        assistant_text = await generate_response(
             user_text
         )
 
         # -------------------------
         # 4. Text → Speech
         # -------------------------
-
-        response_audio = text_to_speech(
-            assistant_text
-        )
+        response_audio = await text_to_speech_bytes(assistant_text)
 
         # -------------------------
         # 5. Audio → Base64
@@ -90,8 +87,8 @@ async def chat(
             "audio_base64": audio_base64,
         }
     except Exception as e:
-        print(f"Something went wrong: {e}")
-        return {"success": False, "message": "Something went wrong", "response_time_ms": response_time_ms}
+        response_time_ms = round((time.monotonic() - start) * 1000, 2)
+        return {"success": False, "message": "Something went wrong", "response_time_ms": response_time_ms, "error": str(e)}
 
 @app.get("/")
 def root():

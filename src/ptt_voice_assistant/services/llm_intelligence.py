@@ -1,14 +1,10 @@
 # services/llm.py
+from ptt_voice_assistant.config.settings import LLM_MODEL
+from ptt_voice_assistant.config.groq_client import client
 
-from groq import Groq
-from ptt_voice_assistant.config.settings import GROQ_API_KEY, LLM_MODEL
+async def generate_response(user_text: str) -> str:
 
-client = Groq(api_key=GROQ_API_KEY)
-
-
-def generate_response(user_text: str) -> str:
-
-    response = client.chat.completions.create(
+    response = await client.chat.completions.create(
         model=LLM_MODEL,
         messages=[
             {

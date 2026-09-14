@@ -1,19 +1,13 @@
 # services/tts.py
+import edge_tts
 
-from io import BytesIO
+# Another method to do it faster then gtts
+async def text_to_speech_bytes(text: str, voice: str = "en-US-AvaNeural") -> bytes:
+    communicate = edge_tts.Communicate(text, voice)
+    audio_data = bytearray()
 
-from gtts import gTTS
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            audio_data.extend(chunk["data"])
 
-
-def text_to_speech(text: str) -> bytes:
-
-    audio = BytesIO()
-
-    tts = gTTS(
-        text=text,
-        lang="en",
-    )
-
-    tts.write_to_fp(audio)
-
-    return audio.getvalue()
+    return bytes(audio_data)
