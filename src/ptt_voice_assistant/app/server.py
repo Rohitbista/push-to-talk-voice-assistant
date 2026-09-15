@@ -62,7 +62,8 @@ async def chat(
         # -------------------------
         # 4. Text → Speech
         # -------------------------
-        response_audio = await text_to_speech_bytes(assistant_text)
+        response_audio = text_to_speech(assistant_text)
+        #response_audio = await text_to_speech_bytes(assistant_text)
 
         # -------------------------
         # 5. Audio → Base64
