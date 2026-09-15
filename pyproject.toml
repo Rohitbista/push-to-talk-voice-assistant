@@ -12,6 +12,8 @@ dependencies = [
     "fastapi[standard]>=0.141.1",
     "groq>=1.7.0",
     "gtts>=2.5.4",
+    "onnxruntime>=1.30.0",
+    "piper-tts>=1.8.0",
     "uvicorn>=0.52.4",
 ]
 

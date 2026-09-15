@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ptt_voice_assistant.services.speech_to_text import transcribe_audio
 from ptt_voice_assistant.services.llm_intelligence import generate_response
-from ptt_voice_assistant.services.text_to_speech import text_to_speech, text_to_speech_bytes
+from ptt_voice_assistant.services.text_to_speech import text_to_speech, strip_markdown
 
 app = FastAPI()
 
@@ -62,7 +62,8 @@ async def chat(
         # -------------------------
         # 4. Text → Speech
         # -------------------------
-        response_audio = text_to_speech(assistant_text)
+        spoken_text = strip_markdown(assistant_text)
+        response_audio = text_to_speech(spoken_text)
         #response_audio = await text_to_speech_bytes(assistant_text)
 
         # -------------------------

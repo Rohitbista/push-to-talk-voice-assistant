@@ -12,6 +12,11 @@ wheels/
 # other files
 .env
 chroma_db/
+voices/
+
+# Ignore Piper model files
+*.onnx
+*.onnx.json
 
 # ==========================================
 # Environments & Packages
